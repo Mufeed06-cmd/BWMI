@@ -1,18 +1,122 @@
-# NTA Exam Tracker
 
-Mobile-first React + FastAPI app for tracking JEE Main, NEET, and CUET exam journeys with AI-assisted date predictions and readiness actions.
+# NTA Exam Tracker — Know Before You Check
 
-The backend uses NTA pattern data and calls Groq when `GROQ_API_KEY` is configured. If no API key is present, the API returns a deterministic pattern-based response so local development still works.
+> AI-assisted milestone predictions for JEE Main, NEET, and CUET students — so you stop refreshing and start preparing.
+
+## 🔴 Live Demo
+
+**[https://bwmi-production.up.railway.app/](https://bwmi-production.up.railway.app/)**
+
+---
+
+## The Problem
+
+Every year, millions of Indian students appear for JEE Main, NEET, and CUET. After the exam ends, they face weeks of uncertainty — when will the answer key drop? When will results come? Students never receive a clear, personalized timeline. Notices appear on the NTA website without warning. There is no way to know what is coming next or when. Students refresh the page daily, sometimes for weeks, not knowing whether to wait or prepare.
+
+---
+
+## The Solution
+
+NTA Exam Tracker gives students a personalized exam journey map:
+
+- Select your **exam** (JEE Main, NEET, or CUET)
+- Select your **current stage** (Applied, Admit Card Released, Exam Done, Answer Key Out)
+- See **predicted upcoming milestones** with estimated dates
+- See **confidence scores** based on historical NTA patterns
+- Get **stage-specific readiness guidance** — exactly what to do right now
+- Hit **Refresh Plan** to regenerate the AI-assisted prediction
+
+---
+
+## How It Works
+
+```
+Synthetic NTA historical pattern data (2019–2024)
+        ↓
+Groq AI analyzes patterns and generates predictions
+        ↓
+Predicted milestones + confidence scores
+        ↓
+Stage-specific actionable readiness guidance
+```
+
+The app uses synthetic historical data reflecting NTA exam cycles from 2019 to 2024. Groq AI analyzes these patterns to generate personalized milestone predictions with confidence percentages. Confidence tapers as predictions extend further into the future.
+
+---
+
+## ⚠️ Important Disclaimer
+
+- All predicted dates are **estimates only**, based on synthetic historical NTA patterns
+- These are **not official NTA notices or announcements**
+- This is an **independent student project**
+- It is **not affiliated with, endorsed by, or operated by NTA**
+- Always verify dates on the [official NTA website](https://nta.ac.in)
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Frontend | React, TypeScript |
+| Backend | FastAPI, Python |
+| AI Inference | Groq |
+| Containerization | Docker |
+| Deployment | Railway |
+
+---
+
+## Codex Usage
+
+GitHub Codex was used as the primary development tool throughout this project. Codex assisted with:
+
+- Scaffolding the FastAPI backend structure and API endpoints
+- Building the React frontend component architecture
+- Integrating the Groq AI client and prediction pipeline
+- Writing the fallback logic for when AI inference is unavailable
+- Mobile-responsive UI refinements
+- Dockerfile and Railway deployment configuration
+
+Codex accelerated development significantly — the working full-stack prototype was running locally within the first session.
+
+---
+
+## Features
+
+- Personalized exam journey map per student
+- AI-assisted milestone predictions (Groq)
+- Confidence scores on future predictions
+- Historical-pattern-based estimates (2019–2024)
+- Stage-specific readiness guidance
+- Supports JEE Main, NEET, and CUET
+- Responsive mobile UI
+- Graceful fallback when AI inference is unavailable
+
+---
 
 ## Local Development
+
+### Prerequisites
+- Python 3.10+
+- Node.js 18+
+- Groq API key (free at [console.groq.com](https://console.groq.com))
 
 ### Backend
 
 ```bash
 cd backend
 python -m venv .venv
-.venv\Scripts\activate
+.venv\Scripts\activate        # Windows
+# source .venv/bin/activate   # Mac/Linux
 pip install -r requirements.txt
+```
+
+Create `backend/.env`:
+```
+GROQ_API_KEY=your_groq_api_key_here
+```
+
+```bash
 uvicorn app.main:app --reload --port 8000
 ```
 
@@ -24,54 +128,60 @@ npm install
 npm run dev
 ```
 
-The React dev server proxies `/api` to `http://localhost:8000`.
+App runs at `http://localhost:8000`
 
-## Environment
+---
 
-Create a backend `.env` file for local development or set Railway variables for deployment:
+## Deployment (Railway)
 
-```bash
-GROQ_API_KEY=your_groq_api_key
-GROQ_MODEL=openai/gpt-oss-20b
+1. Push repository to GitHub
+2. Create new Railway project → Deploy from GitHub repo
+3. Add environment variable in Railway dashboard:
+   ```
+   GROQ_API_KEY=your_groq_api_key_here
+   ```
+4. Railway uses the `Dockerfile` and `railway.json` automatically
+5. Deployment completes and live URL is assigned
+
+---
+
+## Project Structure
+
+```
+BWMI/
+├── backend/
+│   ├── app/
+│   │   ├── main.py          # FastAPI app, routes
+│   │   ├── predictor.py     # Groq AI integration + fallback
+│   │   └── exam_data.py     # Synthetic NTA historical patterns
+│   ├── Dockerfile
+│   └── requirements.txt
+├── frontend/
+│   ├── src/
+│   │   └── main.tsx         # React app
+│   └── package.json
+├── railway.json
+└── README.md
 ```
 
-## Railway Deployment
+---
 
-This repo includes a root `Dockerfile` and `railway.json`. Railway can deploy it as one web service.
+## Future Improvements
 
-The Dockerfile builds `frontend/dist`, copies it to `/app/frontend/dist`, installs the FastAPI backend, and starts:
+- Real-time NTA notice monitoring
+- Push notifications when a new stage is detected
+- Expanded exam coverage (GATE, CUET-PG, state board exams)
+- Student account to track multiple exams simultaneously
 
-```bash
-uvicorn backend.app.main:app --host 0.0.0.0 --port ${PORT:-8000}
-```
+---
 
-FastAPI serves `/api/*` from the backend and serves the compiled React app from `frontend/dist`, so no separate frontend service is required.
+## Submission — Build What Moves India Hackathon
 
-Railway uses the Dockerfile `CMD` as the start command for Dockerfile deployments, so `railway.json` does not need a custom `startCommand`.
+- **Hackathon:** Build What Moves India
+- **Live URL:** https://bwmi-production.up.railway.app/
+- **Repository:** https://github.com/Mufeed06-cmd/BWMI
+- **Built with:** GitHub Codex + Groq AI
 
-Exact steps:
+---
 
-1. Push this repository to GitHub.
-2. In Railway, create a new project and choose **Deploy from GitHub repo**.
-3. Select this repository.
-4. Confirm Railway detects the root `Dockerfile`.
-5. Open the service **Variables** tab.
-6. Add `GROQ_API_KEY` with your Groq key.
-7. Optionally add `GROQ_MODEL` if you want to override the default model.
-8. Deploy the service.
-9. After deployment, open the Railway public URL and test `/api/health`.
-10. In the app, run an exam prediction and confirm the response is AI assisted.
-
-## API
-
-- `GET /api/exams` lists supported exams, stages, and NTA pattern data.
-- `POST /api/track` accepts:
-
-```json
-{
-  "exam": "JEE Main",
-  "current_stage": "Applied"
-}
-```
-
-It returns timeline stages, predicted dates, confidence, readiness items, and whether the response came from Groq or fallback logic.
+*This project was built as part of the Build What Moves India hackathon. It is an independent student project and is not affiliated with or endorsed by NTA.
