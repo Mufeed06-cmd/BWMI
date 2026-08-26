@@ -1,0 +1,22 @@
+.env
+
+# Python
+__pycache__/
+.pytest_cache/
+.venv/
+backend/.venv/
+backend/venv/
+
+# Node
+node_modules/
+frontend/node_modules/
+
+# Build output
+dist/
+frontend/dist/
+*.tsbuildinfo
+
+# Logs
+*.log
+
+.env.example
