@@ -68,7 +68,10 @@ The app uses synthetic historical data reflecting NTA exam cycles from 2019 to 2
 
 ## Codex Usage
 
-GitHub Codex was used as the primary development tool throughout this project. Codex assisted with:
+OpenAI Codex was used as the primary development tool throughout this
+project. Codex assisted with the FastAPI backend, React frontend,
+Groq integration, mobile UI refinements, testing, and Railway
+deployment configuration.
 
 - Scaffolding the FastAPI backend structure and API endpoints
 - Building the React frontend component architecture
